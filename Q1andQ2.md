@@ -1,6 +1,6 @@
 # Oblig 1: Answers to question 1 and 2.
 
-Course: IN5170
+Course: IN5170 <br>
 StudentNr: 686716
 
 # Question 1
@@ -9,7 +9,7 @@ StudentNr: 686716
 
 Each set is defined by the following: 
 ```math
-\omega: \text{set of variables where each variable is a global read variable} \newline
+\omega: \text{set of variables where each variable is a global read variable} \\
 \nu: \text{set of variables where each variable is a global write variable }
 ```
 
@@ -51,7 +51,7 @@ For question two, we assume several processes access the linked list:
 The `find(d)` routine can run concurrently with itself. It only reads head, and does no writing. There is thus interference freedom and the processes can run concurrently: 
 
 ```math
-V_{find} \cap V_{find} = \emptyset \newline
+V_{find} \cap V_{find} = \emptyset \\
 ```
 
 ### Insert & Insert
@@ -59,7 +59,7 @@ V_{find} \cap V_{find} = \emptyset \newline
 For `insert(new)` and `insert(new)` routines, we check each set: 
 
 ```math
-V_{insert} \cap W_{insert} = \{\text{tail}\} \newline
+V_{insert} \cap W_{insert} = \{\text{tail}\} \\
 
 V_{insert} \cap W_{insert} \neq \emptyset
 ```
@@ -73,7 +73,7 @@ Since both routines satisfies the amo-property, the two routines can run concurr
 For `delfront()` and `delfront()` routines, we check each set: 
 
 ```math
-V_{delfront} \cap W_{delfront} = \{\text{head, tail}\} \newline
+V_{delfront} \cap W_{delfront} = \{\text{head, tail}\} \\
 
 V_{delfront} \cap W_{delfront} \neq \emptyset
 ```
@@ -84,8 +84,8 @@ Checking the sets, we see that we conclude that they do intervene with each othe
 For the `find(d)` and `insert(d)` routine. We need to first check each set:
 
 ```math
-V_{find} \cap W_{insert} = \{\text{head}\} \newline
-V_{insert} \cap W_{find} = \emptyset \newline
+V_{find} \cap W_{insert} = \{\text{head}\} \\
+V_{insert} \cap W_{find} = \emptyset \\
 
 V_{find} \cap W_{insert} \neq V_{insert} \cap W_{find}
 ```
@@ -99,29 +99,26 @@ In the `find(d)` routine the `i := head;` statement does not satisfy the amo-pro
 For `find(d)` and `delfront()` routines, we check each set: 
 
 ```math
-V_{find} \cap W_{delfront} = \{\text{head}\} \newline
+V_{find} \cap W_{delfront} = \{\text{head}\} \\
 
-V_{delfront} \cap W_{find} = \emptyset \newline
+V_{delfront} \cap W_{find} = \emptyset \\
 
 V_{find} \cap W_{delfront} \neq V_{delfront} \cap W_{find}
 ```
 
-Checking the sets, we see that we conclude that they do intervene with each other. In the `find(d)` routine the statement `i:= head` we assign a critical reference. `head` is reassigned by the `delfront()` process. This means that the `find(d)` routine does not satisfy the amo-property. Therefore we can conclude that these two can not run concurrently.
+Checking the sets, we see that we conclude that they do intervene with each other. In the `find(d)` routine the statement `i:= head` we assign a critical reference. `head` is reassigned by the `delfront()` process. This means that the `find(d)` routine does not satisfy the amo-property. Thus we can conclude that these two can not run concurrently.
 
 ### Insert & Delfront 
 
 For `insert(d)` and `delfront()` routines, we check each set: 
 
 ```math
-V_{insert} \cap W_{delfront} = \{\text{tail}\} \newline
-
-V_{delfront} \cap W_{insert} = \{\text{head, tail}\} \newline
-
+V_{insert} \cap W_{delfront} = \{\text{tail}\} \\
+V_{delfront} \cap W_{insert} = \{\text{head, tail}\} \\
 V_{find} \cap W_{delfront} \neq V_{delfront} \cap W_{find}
 ```
 
-
-
+Checking the sets, we see that we conclude that they do intervene with each other. Then we need to review the amo-property for both routines. In `delfront()` routine the statement `head:=head.next` we assign a critical statement to the `head`. The `insert()` process reassigns `head` and therefor will the `head.next` be different based on the order of concurrency. Thus the `delfront()` routine does not satisfy the amo-property, and the processes cannot run concurrently.
 
 ### Summary 
 
