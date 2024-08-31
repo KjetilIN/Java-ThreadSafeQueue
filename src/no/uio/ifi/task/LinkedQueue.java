@@ -1,57 +1,66 @@
 package no.uio.ifi.task;
 
+import java.util.concurrent.locks.*;
 
-/* You are allowed to 1. add modifiers to fields and method signatures and 2. add code at the marked places, including removing the following return */
 public class LinkedQueue<T> {
     private Node<T> head;
     private Node<T> tail;
 
+    // ReentrantLock for fine-grained locking instead of synchronized methods
+    private final ReentrantLock lock = new ReentrantLock();
 
-    public synchronized int find(T t){
+    public synchronized int find(T t) {
         // Assume that head is not null 
-        assert(head != null);
+        assert (head != null);
 
-        // Set the first node as the starting point for the search, head must not be null 
         Node<T> currentNode = head;
-
-        // Loop over every node
-        while (!currentNode.content.equals(t)) {
+        while (currentNode != null) {
+            if (currentNode.content.equals(t)) {
+                // Return "pointer" to the node
+                return System.identityHashCode(currentNode);
+            }
             currentNode = currentNode.next;
-            if (currentNode == null){
-                return 0;
-            }
         }
 
-        /* Should return the a pointer to the node */
-        return System.identityHashCode(currentNode);
+        // Not found
+        return 0;
     }
 
-    public void insert(T t){
-       if (tail == null){
-            head = new Node<T>(t);
-       }else{
-            tail.next = new Node<T>(t);
-       }
-       tail = new Node<T>(t);
-       return;
-    }
-
-    public synchronized T delfront(){
-        if (head != null){
-            // Storing content 
-            T content = head.content;
-
-            // Check for only one item in the list
-            if (head == tail){
-                // One element in list
-                tail = null; 
+    public void insert(T t) {
+        lock.lock(); // Lock the method to ensure thread-safe insertions
+        try {
+            Node<T> newNode = new Node<>(t);
+            if (tail == null) {
+                head = newNode;
+            } else {
+                tail.next = newNode;
             }
-            // Reassign head to the next element
-            head = head.next; 
-            return content;
+            tail = newNode;
+        } finally {
+            lock.unlock();
         }
+    }
 
-        // Returns null when the 
-        return null;
+    public T delfront() {
+        lock.lock(); // Lock only the section where deletion is performed
+        try {
+            if (head != null) {
+                // Store content
+                T content = head.content;
+
+                // Check for only one item in the list
+                if (head == tail) {
+                    tail = null; // One element in list
+                }
+                // Reassign head to the next element
+                head = head.next;
+                return content;
+            }
+
+            // Returns null when the queue is empty
+            return null;
+        } finally {
+            lock.unlock(); // Always unlock in a finally block
+        }
     }
 }
