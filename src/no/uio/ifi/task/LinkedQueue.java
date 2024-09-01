@@ -5,18 +5,20 @@ import java.util.concurrent.locks.*;
 public class LinkedQueue<T> {
     private Node<T> head;
     private Node<T> tail;
+    protected int count = 0;
 
     // ReentrantLock for fine-grained locking instead of synchronized methods
-    private final ReentrantLock lock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
 
     public synchronized int find(T t) {
         // Assume that head is not null 
         assert (head != null);
 
+        // Look for the correct node, starting from head. 
         Node<T> currentNode = head;
         while (currentNode != null) {
             if (currentNode.content.equals(t)) {
-                // Return "pointer" to the node
+                // Found the correct node
                 return System.identityHashCode(currentNode);
             }
             currentNode = currentNode.next;
@@ -27,40 +29,48 @@ public class LinkedQueue<T> {
     }
 
     public void insert(T t) {
-        lock.lock(); // Lock the method to ensure thread-safe insertions
+        // Create the new node without needing a lock
+        Node<T> newNode = new Node<>(t);
+
+        // Lock when inserting 
+        lock.lock(); 
         try {
-            Node<T> newNode = new Node<>(t);
             if (tail == null) {
                 head = newNode;
             } else {
                 tail.next = newNode;
             }
             tail = newNode;
+            this.count += 1; 
         } finally {
             lock.unlock();
         }
     }
 
     public T delfront() {
-        lock.lock(); // Lock only the section where deletion is performed
-        try {
-            if (head != null) {
-                // Store content
-                T content = head.content;
+        T content;
 
-                // Check for only one item in the list
-                if (head == tail) {
-                    tail = null; // One element in list
-                }
-                // Reassign head to the next element
-                head = head.next;
-                return content;
+        // Lock when deleting 
+        lock.lock(); 
+        try {
+            // Check if the linked queue is empty 
+            if (head == null) {
+                return null;
             }
 
-            // Returns null when the queue is empty
-            return null;
+            // Store content
+            content = head.content;
+
+            // Check for only one item in the list
+            if (head == tail) {
+                tail = null; // One element in list
+            }
+            // Reassign head to the next element
+            head = head.next;
         } finally {
             lock.unlock(); // Always unlock in a finally block
         }
+
+        return content;
     }
 }
