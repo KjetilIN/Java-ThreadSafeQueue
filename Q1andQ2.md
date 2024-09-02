@@ -1,7 +1,9 @@
 # Oblig 1: Answers to question 1 and 2.
 
-Course: IN5170 <br>
-StudentNr: 686716
+> [NOTE!]
+> Course: IN5170 <br>
+> Student Name: Kjetil Indrehus <br>
+> StudentNr: 686716
 
 # Question 1
 
@@ -9,8 +11,8 @@ StudentNr: 686716
 
 Each set is defined by the following: 
 ```math
-\omega: \text{set of variables where each variable is a global read variable} \\
-\nu: \text{set of variables where each variable is a global write variable }
+\omega: \text{set of global read variables} \\ \\
+\nu: \text{set of global write variables}
 ```
 
 The `find(d)` routine contains read and no write to global references. It reads the head as a local variable and then traverses down the three. `i` is a local variable. Thus the W set (write variables are empty): 
@@ -20,7 +22,7 @@ V := {head}
 W := Ø
 
 
-In the `insert(new)` routine. 
+In the `insert(new)` routine.
 - tail is in the V set (reading the tail)
 - head is in the W set (writing the head)
 - tail is in the W set (writing to the new tail)
@@ -43,9 +45,6 @@ W := {head, tail}
 
 For question two, we assume several processes access the linked list: 
 
-## A. Which combinations of routines can be executed concurrently without interference?
-
-
 ### Find & Find
 
 The `find(d)` routine can run concurrently with itself. It only reads head, and does no writing. There is thus interference freedom and the processes can run concurrently: 
@@ -59,9 +58,9 @@ V_{find} \cap V_{find} = \emptyset \\
 For `insert(new)` and `insert(new)` routines, we check each set: 
 
 ```math
-V_{insert} \cap W_{insert} = \{\text{tail}\} \\
+V_{insert} \cap W_{insert} = \{\text{tail}\} \\ 
 
-V_{insert} \cap W_{insert} \neq \emptyset
+V_{insert} \cap W_{insert} \neq \emptyset 
 ```
 
 Checking the sets, we see that we conclude that they do intervene with each other. Thus we need to check the at-most-once property of both routines. Each statement in the `insert(new)` routine is assignment to a non-critical reference. Thus the amo-property is held.
@@ -120,9 +119,13 @@ V_{find} \cap W_{delfront} \neq V_{delfront} \cap W_{find}
 
 Checking the sets, we see that we conclude that they do intervene with each other. Then we need to review the amo-property for both routines. In `delfront()` routine the statement `head:=head.next` we assign a critical statement to the `head`. The `insert()` process reassigns `head` and therefor will the `head.next` be different based on the order of concurrency. Thus the `delfront()` routine does not satisfy the amo-property, and the processes cannot run concurrently.
 
-### Summary 
+## A. Which combinations of routines can be executed concurrently without interference?
 
-- Find and Find can run concurrently 
+From the walkthrough of all 6 combinations above. We can see that: 
+- Find and Find can run concurrently
 - Insert and Insert can run concurrently
 
 
+## B. Which combinations of routines must be executed one at a time?
+
+From the walkthrough before all the rest of the combination 

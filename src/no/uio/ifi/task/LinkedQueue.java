@@ -16,12 +16,15 @@ public class LinkedQueue<T> {
 
         // Look for the correct node, starting from head. 
         Node<T> currentNode = head;
-        while (currentNode != null) {
-            if (currentNode.content.equals(t)) {
-                // Found the correct node
-                return System.identityHashCode(currentNode);
-            }
+        while (currentNode != null && !currentNode.content.equals(t)) {
             currentNode = currentNode.next;
+        }
+
+        // If current node was found 
+        // Java has no "pointer" per say that can be turned into a type int
+        // Therefore return the hash-code of the object 
+        if (currentNode != null){
+            return System.identityHashCode(currentNode);
         }
 
         // Not found
