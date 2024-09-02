@@ -5,7 +5,6 @@ import java.util.concurrent.locks.*;
 public class LinkedQueue<T> {
     private Node<T> head;
     private Node<T> tail;
-    protected int count = 0;
 
     // ReentrantLock for fine-grained locking instead of synchronized methods
     private final Lock lock = new ReentrantLock();
@@ -44,13 +43,12 @@ public class LinkedQueue<T> {
                 tail.next = newNode;
             }
             tail = newNode;
-            this.count += 1; 
         } finally {
             lock.unlock();
         }
     }
 
-    public T delfront() {
+    public synchronized T delfront() {
         T content;
 
         // Lock when deleting 
