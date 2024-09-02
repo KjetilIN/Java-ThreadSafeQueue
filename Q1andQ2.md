@@ -1,6 +1,6 @@
 # Oblig 1: Answers to question 1 and 2.
 
-> [NOTE!]
+> [!NOTE]
 > Course: IN5170 <br>
 > Student Name: Kjetil Indrehus <br>
 > StudentNr: 686716
@@ -11,7 +11,9 @@
 
 Each set is defined by the following: 
 ```math
-\omega: \text{set of global read variables} \\ \\
+\omega: \text{set of global read variables} 
+```
+```math
 \nu: \text{set of global write variables}
 ```
 
@@ -59,7 +61,8 @@ For `insert(new)` and `insert(new)` routines, we check each set:
 
 ```math
 V_{insert} \cap W_{insert} = \{\text{tail}\} \\ 
-
+```
+```math
 V_{insert} \cap W_{insert} \neq \emptyset 
 ```
 
@@ -72,8 +75,9 @@ Since both routines satisfies the amo-property, the two routines can run concurr
 For `delfront()` and `delfront()` routines, we check each set: 
 
 ```math
-V_{delfront} \cap W_{delfront} = \{\text{head, tail}\} \\
-
+V_{delfront} \cap W_{delfront} = \{\text{head, tail}\}
+```
+```math
 V_{delfront} \cap W_{delfront} \neq \emptyset
 ```
 
@@ -83,9 +87,12 @@ Checking the sets, we see that we conclude that they do intervene with each othe
 For the `find(d)` and `insert(d)` routine. We need to first check each set:
 
 ```math
-V_{find} \cap W_{insert} = \{\text{head}\} \\
+V_{find} \cap W_{insert} = \{\text{head}\}
+```
+```math
 V_{insert} \cap W_{find} = \emptyset \\
-
+```
+```math
 V_{find} \cap W_{insert} \neq V_{insert} \cap W_{find}
 ```
 
@@ -99,9 +106,11 @@ For `find(d)` and `delfront()` routines, we check each set:
 
 ```math
 V_{find} \cap W_{delfront} = \{\text{head}\} \\
-
+```
+```math
 V_{delfront} \cap W_{find} = \emptyset \\
-
+```
+```math
 V_{find} \cap W_{delfront} \neq V_{delfront} \cap W_{find}
 ```
 
@@ -113,8 +122,12 @@ For `insert(d)` and `delfront()` routines, we check each set:
 
 ```math
 V_{insert} \cap W_{delfront} = \{\text{tail}\} \\
+```
+```math
 V_{delfront} \cap W_{insert} = \{\text{head, tail}\} \\
-V_{find} \cap W_{delfront} \neq V_{delfront} \cap W_{find}
+```
+```math
+V_{find} \cap W_{delfront} \neq V_{delfront} \cap W_{find} \neq \emptyset
 ```
 
 Checking the sets, we see that we conclude that they do intervene with each other. Then we need to review the amo-property for both routines. In `delfront()` routine the statement `head:=head.next` we assign a critical statement to the `head`. The `insert()` process reassigns `head` and therefor will the `head.next` be different based on the order of concurrency. Thus the `delfront()` routine does not satisfy the amo-property, and the processes cannot run concurrently.
