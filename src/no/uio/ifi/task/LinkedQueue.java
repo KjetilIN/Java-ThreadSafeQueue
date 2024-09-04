@@ -10,6 +10,17 @@ public class LinkedQueue<T> {
     private final Lock lock = new ReentrantLock();
 
     public synchronized int find(T t) {
+
+        /**
+         * NOTE: We did not find a proper use for the function.
+         * We are able to do the task without using it. 
+         * 
+         * We always take the first node from the queue. Thread N does not need to look for number N in the queue.
+         * 
+         * It was also unclear what to return from this function, since the return type has to be int and not T. 
+         * Therefor, we return 1 if the node is in the queue.  
+         */
+
         // Assume that head is not null 
         assert (head != null);
 
@@ -20,10 +31,9 @@ public class LinkedQueue<T> {
         }
 
         // If current node was found 
-        // Java has no "pointer" per say that can be turned into a type int
-        // Therefore return the hash-code of the object 
+        // We return 1
         if (currentNode != null){
-            return System.identityHashCode(currentNode);
+            return 1;
         }
 
         // Not found
@@ -49,28 +59,31 @@ public class LinkedQueue<T> {
     }
 
     public synchronized T delfront() {
+        /**
+         * This function has the synchronized keyword. This means only one method call off delfront 
+         * can be ran at the time for the thread. This ensures that deleting will only happen once for the entire thread.
+         * Java will allow only one thread at a particular time to complete a given task entirely.
+         * 
+         * Therefor, we do not need to add a lock here. 
+         */
+
         T content;
-
-        // Lock when deleting 
-        lock.lock(); 
-        try {
-            // Check if the linked queue is empty 
-            if (head == null) {
-                return null;
-            }
-
-            // Store content
-            content = head.content;
-
-            // Check for only one item in the list
-            if (head == tail) {
-                tail = null; // One element in list
-            }
-            // Reassign head to the next element
-            head = head.next;
-        } finally {
-            lock.unlock(); // Always unlock in a finally block
+        
+        // Check if the linked queue is empty 
+        if (head == null) {
+            return null;
         }
+
+        // Store content
+        content = head.content;
+
+        // Check for only one item in the list
+        if (head == tail) {
+            tail = null; // One element in list
+        }
+        // Reassign head to the next element
+        head = head.next;
+        
 
         return content;
     }

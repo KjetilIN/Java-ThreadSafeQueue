@@ -153,6 +153,7 @@ public class main {
                 // Boolean for what queue to take from 
                 // Will evenly distribute the reduce method for each 
                 // This is also another way to solve the task of distributing 
+
                 boolean isEven = reduceNumber % 2 == 0;
 
                 // Get a queue based on if the even or odd task number. 
@@ -174,8 +175,8 @@ public class main {
 
         // Final tests
         Thread.sleep(2000);
-        System.out.println("Sum even: "+reducer1.current);
-        System.out.println("Sum odd: "+reducer2.current);
+        System.out.println("Sum even: " + reducer1.current);
+        System.out.println("Sum odd: " + reducer2.current);
 
         int total = 0;
         for(int i = 1; i<= n; i++){

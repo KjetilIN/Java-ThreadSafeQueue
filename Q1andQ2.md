@@ -2,8 +2,9 @@
 
 > [!NOTE]
 > Course: IN5170 <br>
-> Student Name: Kjetil Indrehus <br>
-> StudentNr: 686716
+> Students:
+>   - Kjetil K. Indrehus, kjetiki@uio.no
+>   - Thomas N. Kristiansen, thomank@uio.no
 
 # Question 1
 
@@ -73,21 +74,6 @@ The `find(d)` routine can run concurrently with itself. It only reads head, and 
 \omega_{find}= \emptyset \\
 ```
 
-### Insert & Insert
-
-For `insert(new)` and `insert(new)` routines, we check each set: 
-
-```math
-\nu_{insert} \cap \omega_{insert} = \{\text{tail}\} \\ 
-```
-```math
-\nu_{insert} \cap \omega_{insert} \neq \emptyset 
-```
-
-Checking the sets, we see that we conclude that they do intervene with each other. Thus we need to check the at-most-once property of both routines. Each statement in the `insert(new)` routine is assignment to a non-critical reference. Thus the amo-property is held.
-
-Since both routines satisfies the amo-property, the two routines can run concurrently.
-
 ### Find & Insert
 For the `find(d)` and `insert(d)` routine. We need to first check each set:
 
@@ -105,11 +91,31 @@ Checking the sets, we see that we conclude that they do intervene with each othe
 
 In the `find(d)` routine the `i := head;` statement is assigned to a critical reference, but `i` is a local variable that is not modified by another process, and thus the statement holds the amo-property. 
 
-In the `insert(d)` routine the `head:= new`, which assigns a non-critical statement. Therefor, the amo-property holds. 
+In the `insert(d)` routine the `head:= new`, which assigns a non-critical statement. `find(d)` routine does also not set `head`. Therefor, the amo-property holds. 
+
+The two routines can be ran concurrently. 
 
 ## B. Which combinations of routines must be executed one at a time?
 
 The following combinations of routines must be executed one at a time:  
+
+### Insert & Insert
+
+For `insert(new)` and `insert(new)` routines, we check each set: 
+
+```math
+\nu_{insert} \cap \omega_{insert} = \{\text{tail}\} \\ 
+```
+```math
+\nu_{insert} \cap \omega_{insert} \neq \emptyset 
+```
+
+Checking the sets, we see that we conclude that they do intervene with each other. Thus we need to check the at-most-once property of both routines. Each statement in the `insert(new)` routine is re-assigment of critical references. 
+
+If two processes in order read the condition and goes to `tail.next := new;`, then they can overwrite each others new node. Meaning that one new node will not be in the queue. 
+
+Therefor, the two processes must be executed on at the time. 
+
 
 ### Delfront & Delfront
 
@@ -142,6 +148,8 @@ For `find(d)` and `delfront()` routines, we check each set:
 
 Checking the sets, we see that we conclude that they do intervene with each other. In the `find(d)` routine the statement `i:= head` we assign a critical reference. `head` is reassigned by the `delfront()` process. This means that the `find(d)` routine does not satisfy the amo-property. Thus we can conclude that these two can not run concurrently.
 
+For example `find(d)` looking a list with one node, then the result of `find(d)` could either be null or the one node. It can therefor not run concurrently. 
+
 ### Insert & Delfront 
 
 For `insert(d)` and `delfront()` routines, we check each set: 
@@ -158,3 +166,4 @@ For `insert(d)` and `delfront()` routines, we check each set:
 
 Checking the sets, we see that we conclude that they do intervene with each other. Then we need to review the amo-property for both routines. In `delfront()` routine the statement `head:=head.next` we assign a critical statement to the `head`. The `insert()` process reassigns `head` and therefor will the `head.next` be different based on the order of concurrency. Thus the `delfront()` routine does not satisfy the amo-property, and the processes cannot run concurrently.
 
+For example: Inserting and deleting the node at the same time with an empty queue. Then the order of execution matters. The result might be a single node, or the empty queue. The delete will either remove the inserted node, or nothing. 
